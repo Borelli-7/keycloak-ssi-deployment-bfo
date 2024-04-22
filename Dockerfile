@@ -2,7 +2,7 @@
 FROM maven:3.8.4-openjdk-17-slim AS builder
 
 # Install Git, apt-utils and other dependencies
-RUN apt-get update && apt-get install -y git apt-utils
+RUN apt-get update && apt-get install -y git apt-utils jq
 
 # Configure Git for large HTTP requests
 RUN git config --global http.postBuffer 524288000
@@ -22,15 +22,10 @@ RUN mvn clean install -DskipTests
 RUN tar xzf ./quarkus/dist/target/keycloak-999.0.0-SNAPSHOT.tar.gz -C /opt
 WORKDIR /opt/keycloak-999.0.0-SNAPSHOT
 
-
-
 # Environment variables
 ENV KEYCLOAK_ADMIN=admin
 ENV KEYCLOAK_ADMIN_PASSWORD=admin
 ENV KC_HOSTNAME_STRICT=false
-
-# Build Keycloak with the oid4vc-vci feature
-RUN bin/kc.sh build --features="oid4vc-vci"
 
 # Entry point
 ENTRYPOINT ["bin/kc.sh", "start-dev", "--features=oid4vc-vci"]
