@@ -2,7 +2,7 @@
 FROM maven:3.8.4-openjdk-17-slim AS builder
 
 # Install Git, apt-utils and other dependencies
-RUN apt-get update && apt-get install -y git apt-utils jq
+RUN apt-get update && apt-get install -y git apt-utils
 
 # Configure Git for large HTTP requests
 RUN git config --global http.postBuffer 524288000
@@ -11,9 +11,9 @@ RUN git config --global http.postBuffer 524288000
 RUN git clone --depth 1 https://github.com/keycloak/keycloak.git /tmp/keycloak
 WORKDIR /tmp/keycloak
 
-# Fetch and checkout the pull request branch
-RUN git fetch origin pull/27931/head:pr/wistefan/27931 && \
-    git checkout pr/wistefan/27931
+# # Fetch and checkout the pull request branch
+# RUN git fetch origin pull/27931/head:pr/wistefan/27931 && \
+#     git checkout pr/wistefan/27931
 
 # Build Keycloak without running tests
 RUN mvn clean install -DskipTests
