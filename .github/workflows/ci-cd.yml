@@ -35,9 +35,9 @@ jobs:
             
       - name: Store Certificate in GitHub Secret
         run: |
-          echo "::add-secret name=PRIVATE_KEY::$(cat private_key.pem)"
-          echo "::add-secret name=PUBLIC_KEY::$(cat public_key.pem)"
-          echo "::add-secret name=CERTIFICATE::$(cat certificate.crt)"
+          echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem.secret
+          echo "${{ secrets.PUBLIC_KEY }}" > public_key.pem.secret
+          echo "${{ secrets.CERTIFICATE }}" > certificate.crt.secret
           
 
   build-deliver:
