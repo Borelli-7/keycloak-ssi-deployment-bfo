@@ -1,4 +1,4 @@
-name: ci-cd
+name: ci/cd-kcoid4vci
 
 on:
   push:
@@ -16,6 +16,23 @@ env:
   CONTAINER_NAME: "app"                          
   
 jobs:
+  generate_certificates:
+    runs-on: ubuntu-latest
+          
+    steps:
+      - name: Generate Key and Certificate
+        run: |
+          openssl ecparam -genkey -name prime256v1 -out private_key.pem
+          openssl ec -in private_key.pem -pubout -out public_key.pem
+          openssl req -x509 -new -nodes -key private_key.pem -sha256 -days 365 -out certificate.crt -config cert-config.txt
+          
+      - name: Store Certificate in GitHub Secret
+        run: |
+          echo "::add-secret name=PRIVATE_KEY::$(cat private_key.pem)"
+          echo "::add-secret name=PUBLIC_KEY::$(cat public_key.pem)"
+          echo "::add-secret name=CERTIFICATE::$(cat certificate.crt)"
+          
+
   build-deliver:
     runs-on: ubuntu-latest
 
