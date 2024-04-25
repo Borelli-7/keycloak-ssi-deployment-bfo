@@ -13,19 +13,26 @@ env:
   ECS_SERVICE: kcoid4vci                     
   ECS_CLUSTER: kcoid4vci                     
   ECS_TASK_DEFINITION: .aws/task-definition.json 
-  CONTAINER_NAME: "app"                          
+  CONTAINER_NAME: "app"          
+  
+permissions:
+  packages: write
+  contents: read
   
 jobs:
   generate_certificates:
     runs-on: ubuntu-latest
           
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Generate Key and Certificate
         run: |
           openssl ecparam -genkey -name prime256v1 -out private_key.pem
           openssl ec -in private_key.pem -pubout -out public_key.pem
           openssl req -x509 -new -nodes -key private_key.pem -sha256 -days 365 -out certificate.crt -config cert-config.txt
-          
+            
       - name: Store Certificate in GitHub Secret
         run: |
           echo "::add-secret name=PRIVATE_KEY::$(cat private_key.pem)"
@@ -35,10 +42,6 @@ jobs:
 
   build-deliver:
     runs-on: ubuntu-latest
-
-    permissions:
-      packages: write
-      contents: read
   
     steps:
       - name: Checkout
