@@ -2,7 +2,7 @@
 FROM maven:3.8.4-openjdk-17-slim AS builder
 
 # Install Git, apt-utils and other dependencies
-RUN apt-get update && apt-get install -y git apt-utils
+RUN apt-get update && apt-get install -y git apt-utils jq
 
 # Configure Git for large HTTP requests
 RUN git config --global http.postBuffer 524288000

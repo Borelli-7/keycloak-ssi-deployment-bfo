@@ -1,0 +1,16 @@
+version: '3'
+services:
+  keycloak:
+    image: keycloak-oid4vc:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - ../kc-utils/cert-config.txt:/opt/keycloak-999.0.0-SNAPSHOT/cert-config.txt
+      - ../kc-utils/certificate.crt:/opt/keycloak-999.0.0-SNAPSHOT/certificate.crt
+      - ../kc-utils/client-oid4vc.json:/opt/keycloak-999.0.0-SNAPSHOT/client-oid4vc.json
+      - ../kc-utils/private_key.pem:/opt/keycloak-999.0.0-SNAPSHOT/private_key.pem
+      - ../kc-utils/public_key.pem:/opt/keycloak-999.0.0-SNAPSHOT/public_key.pem
+      - ../kc-utils/public_key.pem:/opt/keycloak-999.0.0-SNAPSHOT/keycloak_keystore.p12
+      - keycloak_data:/opt
+volumes:
+  keycloak_data:
